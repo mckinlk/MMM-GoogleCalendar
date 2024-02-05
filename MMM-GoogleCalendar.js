@@ -108,7 +108,7 @@ Module.register("MMM-GoogleCalendar", {
 
   // Override socket notification handler.
   socketNotificationReceived: function (notification, payload) {
-    if (notification === updateNotification) {
+    if (notification === this.config.updateNotification) {
       //delay to ensure we dont thrash the API
       setTimeout(function() {
         console.log('GCAL Cooldown 3sec');
