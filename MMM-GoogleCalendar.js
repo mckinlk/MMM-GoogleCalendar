@@ -106,15 +106,19 @@ Module.register("MMM-GoogleCalendar", {
     }
   },
 
-  // Override socket notification handler.
-  socketNotificationReceived: function (notification, payload) {
+  notificationReceived: function (notification, payload, sender) {
     if (notification === this.config.updateNotification) {
+      Log.info("Received Update notificaiton");
       //delay to ensure we dont thrash the API
       setTimeout(function() {
         console.log('GCAL Cooldown 3sec');
       }, 3000);
+      Log.info("Cooldown complete");
       this.fetchCalendars()
     }
+  },
+  // Override socket notification handler.
+  socketNotificationReceived: function (notification, payload) {
     // Authentication done before any calendar is fetched
     if (notification === "AUTH_FAILED") {
       let error_message = this.translate(payload.error_type);
