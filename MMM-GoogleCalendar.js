@@ -111,9 +111,9 @@ Module.register("MMM-GoogleCalendar", {
     if (notification === this.config.updateNotification) {
       Log.info("Received Update notificaiton");
       //delay to ensure we dont thrash the API
-      setTimeout(function() {
-        this.fetchCalendars();
-      }, this.config.cooldownDelay);
+      setTimeout(
+        this.fetchCalendars(),
+        this.config.cooldownDelay);
     }
   },
   // Override socket notification handler.
