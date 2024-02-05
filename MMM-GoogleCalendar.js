@@ -37,6 +37,7 @@ Module.register("MMM-GoogleCalendar", {
     hideTime: false,
     colored: false,
     coloredSymbolOnly: false,
+    updateNotificaiton: 'GCAL_UPDATE',
     customEvents: [], // Array of {keyword: "", symbol: "", color: ""} where Keyword is a regexp and symbol/color are to be applied for matched
     tableClass: "small",
     calendars: [
@@ -107,6 +108,13 @@ Module.register("MMM-GoogleCalendar", {
 
   // Override socket notification handler.
   socketNotificationReceived: function (notification, payload) {
+    if (notification === updateNotificaiton) {
+      //delay to ensure we dont thrash the API
+      setTimeout(function() {
+        console.log('GCAL Cooldown 3sec');
+      }, 3000);
+      this.fetchCalendars()
+    }
     // Authentication done before any calendar is fetched
     if (notification === "AUTH_FAILED") {
       let error_message = this.translate(payload.error_type);
