@@ -37,7 +37,7 @@ Module.register("MMM-GoogleCalendar", {
     hideTime: false,
     colored: false,
     coloredSymbolOnly: false,
-    updateNotificaiton: 'GCAL_UPDATE',
+    updateNotification: 'GCAL_UPDATE',
     customEvents: [], // Array of {keyword: "", symbol: "", color: ""} where Keyword is a regexp and symbol/color are to be applied for matched
     tableClass: "small",
     calendars: [
@@ -108,7 +108,7 @@ Module.register("MMM-GoogleCalendar", {
 
   // Override socket notification handler.
   socketNotificationReceived: function (notification, payload) {
-    if (notification === updateNotificaiton) {
+    if (notification === updateNotification) {
       //delay to ensure we dont thrash the API
       setTimeout(function() {
         console.log('GCAL Cooldown 3sec');
