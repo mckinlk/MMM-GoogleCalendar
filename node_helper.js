@@ -40,6 +40,8 @@ module.exports = NodeHelper.create({
         payload.calendarID,
         payload.fetchInterval,
         payload.maximumEntries,
+        payload.pastDaysCount,
+        payload.broadcastPastEvents,
         payload.id
       );
     }
@@ -209,12 +211,21 @@ module.exports = NodeHelper.create({
     calendarID,
     fetchInterval,
     maximumEntries,
+    pastDaysCount,
+    broadcastPastEvents,
     identifier
   ) {
+    var currentDate = new Date();
+    if (!broadcastPastEvents) {
+      pastDaysCount = 0;
+    }
+    currentDate.setDate(currentDate.getDate() - pastDaysCount);
+    var minDate = currentDate.toISOString();
+
     this.calendarService.events.list(
       {
         calendarId: calendarID,
-        timeMin: new Date().toISOString(),
+        timeMin: minDate,
         maxResults: maximumEntries,
         singleEvents: true,
         orderBy: "startTime"

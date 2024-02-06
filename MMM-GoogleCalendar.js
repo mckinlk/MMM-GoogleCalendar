@@ -9,6 +9,7 @@ Module.register("MMM-GoogleCalendar", {
   defaults: {
     maximumEntries: 10, // Total Maximum Entries
     maximumNumberOfDays: 365,
+    pastDaysCount: 0,
     limitDays: 0, // Limit the number of days shown, 0 = no limit
     displaySymbol: true,
     defaultSymbol: "calendar", // Fontawesome Symbol see https://fontawesome.com/cheatsheet?from=io
@@ -786,6 +787,7 @@ Module.register("MMM-GoogleCalendar", {
       symbolClass: calendarConfig.symbolClass,
       titleClass: calendarConfig.titleClass,
       timeClass: calendarConfig.timeClass,
+      pastDaysCount: this.config.pastDaysCount,
 	  broadcastPastEvents: calendarConfig.broadcastPastEvents || this.config.broadcastPastEvents,
     });
   },
