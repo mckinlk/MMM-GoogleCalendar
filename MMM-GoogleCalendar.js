@@ -60,7 +60,7 @@ Module.register("MMM-GoogleCalendar", {
     excludedEvents: [],
     sliceMultiDayEvents: false,
     nextDaysRelative: false,
-	broadcastPastEvents: false,
+    broadcastPastEvents: false,
   },
 
   requiresVersion: "2.1.0",
@@ -380,7 +380,7 @@ Module.register("MMM-GoogleCalendar", {
           if (this.config.showEnd) {
             timeWrapper.innerHTML += ` - ${this.capFirst(moment(event.endDate, "x").format("LT"))}`;
           }
-          
+
           eventWrapper.appendChild(timeWrapper);
           titleWrapper.classList.add("align-right");
         }
@@ -677,7 +677,7 @@ Module.register("MMM-GoogleCalendar", {
               moment(event.startDate, formatStr)
                 .endOf("day")
                 .format(formatStr)) /
-              (1000 * 60 * 60 * 24)
+            (1000 * 60 * 60 * 24)
           ) + 1;
         if (this.config.sliceMultiDayEvents && maxCount > 1) {
           const splitEvents = [];
@@ -788,7 +788,7 @@ Module.register("MMM-GoogleCalendar", {
       titleClass: calendarConfig.titleClass,
       timeClass: calendarConfig.timeClass,
       pastDaysCount: this.config.pastDaysCount,
-	  broadcastPastEvents: calendarConfig.broadcastPastEvents || this.config.broadcastPastEvents,
+      broadcastPastEvents: calendarConfig.broadcastPastEvents || this.config.broadcastPastEvents,
     });
   },
 
@@ -1053,10 +1053,11 @@ Module.register("MMM-GoogleCalendar", {
     for (const calendarID in this.calendarData) {
       for (const ev of this.calendarData[calendarID]) {
         const event = Object.assign({}, ev);
+        event.calendarID = calendarID; //attached calendar ID to event temporarily
         event.symbol = this.symbolsForEvent(event);
         event.calendarName = this.calendarNameForCalendar(calendarID);
         event.color = this.colorForCalendar(calendarID);
-        delete event.calendarID;
+        delete event.calendarID; //detach
 
         // Make a broadcasting event to be compatible with the default calendar module.
         event.title = event.summary;
