@@ -38,6 +38,7 @@ Module.register("MMM-GoogleCalendar", {
     colored: false,
     coloredSymbolOnly: false,
     updateNotification: 'GCAL_UPDATE',
+    calendarNotification: 'UPDATE_CAL',
     cooldownDelay: 1000 * 1,
     customEvents: [], // Array of {keyword: "", symbol: "", color: ""} where Keyword is a regexp and symbol/color are to be applied for matched
     tableClass: "small",
@@ -160,6 +161,8 @@ Module.register("MMM-GoogleCalendar", {
         if (this.config.broadcastEvents) {
           this.broadcastEvents();
         }
+        Log.info("Send update to calendar");
+        this.sendNotification(calendarNotification);
       }
     } else if (notification === "CALENDAR_ERROR") {
       let error_message = this.translate(payload.error_type);
