@@ -111,7 +111,7 @@ Module.register("MMM-GoogleCalendar", {
 
   notificationReceived: function (notification, payload, sender) {
     if (notification === this.config.updateNotification) {
-      Log.info("Received Update notificaiton");
+      Log.info("Received Update notification");
       //delay to ensure we dont thrash the API
       setTimeout(
         this.fetchCalendars(),
@@ -163,7 +163,7 @@ Module.register("MMM-GoogleCalendar", {
           this.broadcastEvents();
         }
         Log.info("Send update to calendar");
-        this.sendNotification(calendarNotification);
+        this.sendNotification(this.config.calendarNotification);
       }
     } else if (notification === "CALENDAR_ERROR") {
       let error_message = this.translate(payload.error_type);
