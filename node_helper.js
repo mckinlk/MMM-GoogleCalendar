@@ -285,7 +285,7 @@ module.exports = NodeHelper.create({
   },
 
   broadcastEvents: function (events, identifier, calendarID) {
-    this.sendSocketNotification("CALENDAR_EVENTS", {
+    this.sendSocketNotification("CALENDAR_EVENTS_MODULE", {
       id: identifier,
       calendarID,
       events: events

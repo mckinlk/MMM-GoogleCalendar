@@ -153,7 +153,7 @@ Module.register("MMM-GoogleCalendar", {
       return;
     }
 
-    if (notification === "CALENDAR_EVENTS") {
+    if (notification === "CALENDAR_EVENTS_MODULE") {
       if (this.hasCalendarID(payload.calendarID)) {
         this.calendarData[payload.calendarID] = payload.events;
         this.error = null;
