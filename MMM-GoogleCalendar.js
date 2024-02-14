@@ -39,6 +39,7 @@ Module.register("MMM-GoogleCalendar", {
     colored: false,
     coloredSymbolOnly: false,
     updateNotification: 'GCAL_UPDATE',
+    calendarNotification: 'UPDATE_CAL',
     cooldownDelay: 1000 * 1,
     customEvents: [], // Array of {keyword: "", symbol: "", color: ""} where Keyword is a regexp and symbol/color are to be applied for matched
     tableClass: "small",
@@ -61,7 +62,7 @@ Module.register("MMM-GoogleCalendar", {
     nextDaysRelative: false,
     broadcastPastEvents: false,
   },
-
+  
   requiresVersion: "2.1.0",
 
   // Define required scripts.
@@ -96,6 +97,7 @@ Module.register("MMM-GoogleCalendar", {
 
     // indicate no data available yet
     this.loaded = false;
+    this.updateReceived = false;
 
     // check if current URL is module's auth url
     if (location.search.includes(this.name)) {
@@ -115,6 +117,7 @@ Module.register("MMM-GoogleCalendar", {
       setTimeout(
         this.fetchCalendars(),
         this.config.cooldownDelay);
+      this.updateReceived = true;
     }
   },
   // Override socket notification handler.
@@ -161,6 +164,10 @@ Module.register("MMM-GoogleCalendar", {
 
         if (this.config.broadcastEvents) {
           this.broadcastEvents();
+        }
+        if (this.updateReceived === true) {
+          this.sendNotification(this.config.calendarNotification);
+          this.updateReceived = false;
         }
       }
     } else if (notification === "CALENDAR_ERROR") {
