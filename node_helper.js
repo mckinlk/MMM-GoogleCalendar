@@ -238,11 +238,11 @@ module.exports = NodeHelper.create({
             err
           );
           let error_type = NodeHelper.checkFetchError(err);
-		  if (error_type === 'MODULE_ERROR_UNSPECIFIED') {
-			  error_type = this.checkForHTTPError(err) || error_type;
-		  }
+          if (error_type === 'MODULE_ERROR_UNSPECIFIED') {
+            error_type = this.checkForHTTPError(err) || error_type;
+          }
 
-		  // send error to module
+          // send error to module
           this.sendSocketNotification("CALENDAR_ERROR", {
             id: identifier,
             error_type
@@ -252,13 +252,15 @@ module.exports = NodeHelper.create({
           Log.info(
             `${this.name}: ${events.length} events loaded for ${calendarID}`
           );
-          this.broadcastEvents(events, identifier, calendarID); 
+          this.broadcastEvents(events, identifier, calendarID);
         }
-        
+
         this.scheduleNextCalendarFetch(
           calendarID,
           fetchInterval,
           maximumEntries,
+          pastDaysCount,
+          broadcastPastEvents,          
           identifier
         );
       }
@@ -269,6 +271,8 @@ module.exports = NodeHelper.create({
     calendarID,
     fetchInterval,
     maximumEntries,
+    pastDaysCount,
+    broadcastPastEvents,    
     identifier
   ) {
     var _this = this;
@@ -278,6 +282,8 @@ module.exports = NodeHelper.create({
           calendarID,
           fetchInterval,
           maximumEntries,
+          pastDaysCount,
+          broadcastPastEvents,          
           identifier
         );
       }, fetchInterval);
@@ -285,6 +291,8 @@ module.exports = NodeHelper.create({
   },
 
   broadcastEvents: function (events, identifier, calendarID) {
+    Log.info("broadcastEvents:", identifier)
+    Log.info("broadcastEvents:", calendarID)
     this.sendSocketNotification("CALENDAR_EVENTS_MODULE", {
       id: identifier,
       calendarID,

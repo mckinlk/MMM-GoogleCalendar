@@ -39,7 +39,6 @@ Module.register("MMM-GoogleCalendar", {
     colored: false,
     coloredSymbolOnly: false,
     updateNotification: 'GCAL_UPDATE',
-    calendarNotification: 'UPDATE_CAL',
     cooldownDelay: 1000 * 1,
     customEvents: [], // Array of {keyword: "", symbol: "", color: ""} where Keyword is a regexp and symbol/color are to be applied for matched
     tableClass: "small",
@@ -120,6 +119,7 @@ Module.register("MMM-GoogleCalendar", {
   },
   // Override socket notification handler.
   socketNotificationReceived: function (notification, payload) {
+    Log.info("socketNotificationReceived:", notification)
     // Authentication done before any calendar is fetched
     if (notification === "AUTH_FAILED") {
       let error_message = this.translate(payload.error_type);
@@ -162,8 +162,6 @@ Module.register("MMM-GoogleCalendar", {
         if (this.config.broadcastEvents) {
           this.broadcastEvents();
         }
-        Log.info("Send update to calendar");
-        this.sendNotification(this.config.calendarNotification);
       }
     } else if (notification === "CALENDAR_ERROR") {
       let error_message = this.translate(payload.error_type);
