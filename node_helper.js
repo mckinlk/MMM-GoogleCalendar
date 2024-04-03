@@ -42,7 +42,8 @@ module.exports = NodeHelper.create({
         payload.maximumEntries,
         payload.pastDaysCount,
         payload.broadcastPastEvents,
-        payload.id
+        payload.id,
+        payload.reschedule
       );
     }
   },
@@ -213,7 +214,8 @@ module.exports = NodeHelper.create({
     maximumEntries,
     pastDaysCount,
     broadcastPastEvents,
-    identifier
+    identifier,
+    reschedule
   ) {
     var currentDate = new Date();
     if (!broadcastPastEvents) {
@@ -255,14 +257,15 @@ module.exports = NodeHelper.create({
           this.broadcastEvents(events, identifier, calendarID);
         }
 
-        this.scheduleNextCalendarFetch(
+        if (reschedule === true){
+          this.scheduleNextCalendarFetch(
           calendarID,
           fetchInterval,
           maximumEntries,
           pastDaysCount,
           broadcastPastEvents,          
           identifier
-        );
+        );}
       }
     );
   },
@@ -284,7 +287,8 @@ module.exports = NodeHelper.create({
           maximumEntries,
           pastDaysCount,
           broadcastPastEvents,          
-          identifier
+          identifier,
+          true
         );
       }, fetchInterval);
     }

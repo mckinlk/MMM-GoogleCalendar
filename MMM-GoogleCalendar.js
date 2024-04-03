@@ -115,7 +115,7 @@ Module.register("MMM-GoogleCalendar", {
       Log.info("Received Update notification");
       //delay to ensure we dont thrash the API
       setTimeout(
-        this.fetchCalendars(),
+        this.fetchCalendars(false),
         this.config.cooldownDelay);
       this.updateReceived = true;
     }
@@ -149,7 +149,7 @@ Module.register("MMM-GoogleCalendar", {
 
     if (notification === "SERVICE_READY") {
       // start fetching calendars
-      this.fetchCalendars();
+      this.fetchCalendars(true);
     }
 
     if (this.identifier !== payload.id) {
@@ -538,7 +538,7 @@ Module.register("MMM-GoogleCalendar", {
     return wrapper;
   },
 
-  fetchCalendars: function () {
+  fetchCalendars: function (reschedule) {
     this.config.calendars.forEach((calendar) => {
       if (!calendar.calendarID) {
         Log.warn(this.name + ": Unable to fetch, no calendar ID found!");
@@ -564,8 +564,8 @@ Module.register("MMM-GoogleCalendar", {
       }
 
       // tell helper to start a fetcher for this calendar
-      // fetcher till cycle
-      this.addCalendar(calendar.calendarID, calendarConfig);
+      // add (for scheduled refresh) or get calendar events depending on "once" request
+      this.addCalendar(calendar.calendarID, calendarConfig, reschedule);
     });
   },
 
@@ -778,8 +778,34 @@ Module.register("MMM-GoogleCalendar", {
    * @param {string} calendarID string
    * @param {object} calendarConfig The config of the specific calendar
    */
-  addCalendar: function (calendarID, calendarConfig) {
+  addCalendar: function (calendarID, calendarConfig, reschedule) {
     this.sendSocketNotification("ADD_CALENDAR", {
+      id: this.identifier,
+      reschedule: reschedule,
+      calendarID,
+      excludedEvents:
+        calendarConfig.excludedEvents || this.config.excludedEvents,
+      maximumEntries:
+        calendarConfig.maximumEntries || this.config.maximumEntries,
+      maximumNumberOfDays:
+        calendarConfig.maximumNumberOfDays || this.config.maximumNumberOfDays,
+      fetchInterval: this.config.fetchInterval,
+      symbolClass: calendarConfig.symbolClass,
+      titleClass: calendarConfig.titleClass,
+      timeClass: calendarConfig.timeClass,
+      pastDaysCount: this.config.pastDaysCount,
+      broadcastPastEvents: calendarConfig.broadcastPastEvents || this.config.broadcastPastEvents,
+    });
+  },
+
+  /**
+   * Requests node helper to get calendar ID
+   *
+   * @param {string} calendarID string
+   * @param {object} calendarConfig The config of the specific calendar
+   */
+  getCalendar: function (calendarID, calendarConfig) {
+    this.sendSocketNotification("GET_CALENDAR", {
       id: this.identifier,
       calendarID,
       excludedEvents:
